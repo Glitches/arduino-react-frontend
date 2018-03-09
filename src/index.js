@@ -3,17 +3,20 @@ import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import App from './App';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 
-// let store = createStore();
+import reducers from './reducers';
+import api from './middleware/api';
+
+let store = createStore(reducers, applyMiddleware(api));
 
 const render = Component => {
   ReactDOM.render(
-    // <Provider store={store}>
     <AppContainer>
-      <Component />
+      <Provider store={store}>
+        <Component />
+      </Provider>
     </AppContainer>,
-    // </Provider>,
     document.getElementById('root')
   );
 };
