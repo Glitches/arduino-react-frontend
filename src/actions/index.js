@@ -9,20 +9,17 @@ export const fadeLed = data => ({
     types: [FADE_REQUEST, FADE_SUCCESS, FADE_FAILURE],
     endpoint: '/fade',
     method: 'GET'
+  },
+  meta: {
+    throttle: 1500
   }
 });
 
-export const LOGOUT_USER = 'LOGOUT_USER';
+export const FADE_TIME = 'FADE_TIME';
 
-export const logoutUser = () => ({
-  type: LOGOUT_USER
-});
-
-export const SET_USER = 'SET_USER';
-
-export const setUser = data => ({
-  type: SET_USER,
-  data
+export const fadeTime = millisec => ({
+  type: FADE_TIME,
+  millisec
 });
 
 export const goToUser = userId => ({

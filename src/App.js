@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { Button, Grid, Header, List, Segment } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Input,
+  List,
+  Segment
+} from 'semantic-ui-react';
 import * as action from './actions/index.js';
 import { connect } from 'react-redux';
 
@@ -39,8 +47,14 @@ class App extends Component {
   state = {};
 
   callFade = () => {
-    console.log('here');
     this.props.fadeLed();
+  };
+
+  setFadeTime = (e, data) => {
+    //    console.log('event', e.target);
+    e.preventDefault();
+    console.log('data', data);
+    this.props.fadeTime(data.value);
   };
 
   render() {
@@ -51,34 +65,18 @@ class App extends Component {
 
           <Grid>
             <Grid.Column computer={6} mobile={16}>
-              <p>
-                Welcome to your Semantic UI React App! It is awesome{' '}
-                <span aria-label="emoji" role="img">
-                  😉
-                </span>
-              </p>
+              <Input focus placeholder="Time" onChange={this.setFadeTime} />
+              <Form>
+                <Form.Field>
+                  <label>Fade Time</label>
+                  <input placeholder="Fade Time" onChange={this.setFadeTime} />
+                </Form.Field>
+              </Form>
             </Grid.Column>
             <Grid.Column computer={10} mobile={16}>
               <Header as="h3">
-                Themed <code>Button</code>
+                Click the <code>Button</code> to fade
               </Header>
-              <p>
-                Semantic UI React does not have own theming and fully relies on
-                CSS part of Semantic UI. It is normal, Semantic UI theming is
-                very powerful, it allows you fully modify the look of your app
-                using theming variables.
-              </p>
-              <p>
-                We changed the <code>primary</code> color of <code>Button</code>{' '}
-                component, it is really easy
-                <span aria-label="emoji" role="img">
-                  😁
-                </span>{' '}
-                Take a look to{' '}
-                <code>/src/styling/theme/elements/button.variables</code>. By
-                the way, the <code>theme</code> directory structure fully
-                matches the component structure of Semantic UI React.
-              </p>
               <Button primary>Primary Button</Button>
               <Button onClick={() => this.callFade()}>Fade LED</Button>
 
@@ -122,11 +120,12 @@ class App extends Component {
   }
 }
 const mapStateToProps = state => ({
-  fadedLed: state.fade
+  time: state.time
 });
 
 const mapDispatchToProps = dispatch => ({
-  fadeLed: () => dispatch(action.fadeLed())
+  fadeLed: () => dispatch(action.fadeLed()),
+  fadeTime: millisec => dispatch(action.fadeTime(millisec))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
