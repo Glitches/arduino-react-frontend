@@ -47,17 +47,25 @@ class App extends Component {
   state = {};
 
   callFade = () => {
-    this.props.fadeLed();
+    const { fade_millisec } = this.props.arduino;
+    this.props.fadeLed(fade_millisec);
+  };
+
+  callStrobe = () => {
+    const { strobe_endpoint } = this.props.arduino;
+    console.log(strobe_endpoint);
+    this.props.strobeLed(strobe_endpoint);
+    this.props.strobeOn();
   };
 
   setFadeTime = (e, data) => {
     //    console.log('event', e.target);
     e.preventDefault();
-    console.log('data', data);
     this.props.fadeTime(data.value);
   };
 
   render() {
+    const { strobe_on } = this.props.arduino;
     return (
       <Navbar leftItems={leftItems} rightItems={rightItems}>
         <Segment>
@@ -65,53 +73,20 @@ class App extends Component {
 
           <Grid>
             <Grid.Column computer={6} mobile={16}>
+              <Header as="h3">Fade time (ms)</Header>
               <Input focus placeholder="Time" onChange={this.setFadeTime} />
-              <Form>
-                <Form.Field>
-                  <label>Fade Time</label>
-                  <input placeholder="Fade Time" onChange={this.setFadeTime} />
-                </Form.Field>
-              </Form>
             </Grid.Column>
             <Grid.Column computer={10} mobile={16}>
               <Header as="h3">
                 Click the <code>Button</code> to fade
               </Header>
-              <Button primary>Primary Button</Button>
-              <Button onClick={() => this.callFade()}>Fade LED</Button>
-
-              <Header as="h3">Custom themed component</Header>
-              <p>
-                In the real world you will always need custom components, and
-                you will want to get them themed like your app. An example is
-                below:
-              </p>
-
-              <CustomMessage>Hey, it is a custom message</CustomMessage>
-
-              <p>
-                Take a look <code>/src/components/CustomMessage</code>{' '}
-                directory. The are some important things:
-              </p>
-              <List bulleted>
-                <List.Item>
-                  we premade <code>heading.less</code> for you, when you will
-                  include it in your LESS file you will able to use your
-                  existing SUI variables!
-                </List.Item>
-                <List.Item>
-                  we enabled{' '}
-                  <a
-                    href="https://github.com/css-modules/css-modules"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    CSS modules
-                  </a>{' '}
-                  for your components, it means that you will need to use{' '}
-                  <code>:global</code> when your style will match SUI parts
-                </List.Item>
-              </List>
+              <Button onClick={this.callFade}>Fade LED</Button>
+              <Button
+                onClick={this.callStrobe}
+                color={strobe_on ? 'red' : 'grey'}
+              >
+                Strobe LED
+              </Button>
             </Grid.Column>
           </Grid>
         </Segment>
@@ -120,12 +95,14 @@ class App extends Component {
   }
 }
 const mapStateToProps = state => ({
-  time: state.time
+  arduino: state.arduino
 });
 
 const mapDispatchToProps = dispatch => ({
-  fadeLed: () => dispatch(action.fadeLed()),
-  fadeTime: millisec => dispatch(action.fadeTime(millisec))
+  fadeLed: fadeTime => dispatch(action.fadeLed(fadeTime)),
+  fadeTime: millisec => dispatch(action.fadeTime(millisec)),
+  strobeLed: strobe_endpoint => dispatch(action.strobeLed(strobe_endpoint)),
+  strobeOn: () => dispatch(action.strobeOn())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -4,10 +4,27 @@ export const FADE_REQUEST = 'FADE_REQUEST';
 export const FADE_SUCCESS = 'FADE_SUCCESS';
 export const FADE_FAILURE = 'FADE_FAILURE';
 
-export const fadeLed = data => ({
+export const fadeLed = fadeTime => ({
   [CALL_API]: {
     types: [FADE_REQUEST, FADE_SUCCESS, FADE_FAILURE],
-    endpoint: '/fade',
+    endpoint: '/fade?time=' + fadeTime,
+    method: 'GET'
+  },
+  meta: {
+    throttle: 1500
+  }
+});
+
+export const STROBE_REQUEST = 'STROBE_REQUEST';
+export const STROBE_SUCCESS = 'STROBE_SUCCESS';
+export const STROBE_FAILURE = 'STROBE_FAILURE';
+
+export const STROBE_ON = 'STROBE_ON';
+
+export const strobeLed = strobe_endpoint => ({
+  [CALL_API]: {
+    types: [STROBE_REQUEST, STROBE_SUCCESS, STROBE_FAILURE],
+    endpoint: strobe_endpoint,
     method: 'GET'
   },
   meta: {
@@ -22,9 +39,8 @@ export const fadeTime = millisec => ({
   millisec
 });
 
-export const goToUser = userId => ({
-  type: 'SELECT_USER',
-  userId
+export const strobeOn = () => ({
+  type: STROBE_ON
 });
 
 export const setEntities = data => ({

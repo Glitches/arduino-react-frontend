@@ -1,6 +1,7 @@
 const API_URL = 'http://localhost:5000';
 
-const callApi = (endpoint, method = 'GET', body) => {
+const callApi = (endpoint, method = 'GET', body = {}) => {
+  console.log(endpoint);
   const fullUrl = API_URL + endpoint;
   const headers = {};
   if (method === 'POST' || method === 'PUT')
