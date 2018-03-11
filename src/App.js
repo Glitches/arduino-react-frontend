@@ -37,7 +37,7 @@ const rightItems = [
     as: 'a',
     content: 'Backend Repository',
     icon: 'github',
-    href: 'https://github.com/glitches/arduino-backend',
+    href: 'https://github.com/glitches/arduino-server',
     key: 'backend_github',
     target: '_blank'
   }
