@@ -3,17 +3,15 @@ import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import App from './App';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-
-// let store = createStore();
+import store from './store/config.js';
 
 const render = Component => {
   ReactDOM.render(
-    // <Provider store={store}>
     <AppContainer>
-      <Component />
+      <Provider store={store}>
+        <Component />
+      </Provider>
     </AppContainer>,
-    // </Provider>,
     document.getElementById('root')
   );
 };

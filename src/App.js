@@ -1,5 +1,15 @@
-import React from 'react';
-import { Button, Grid, Header, List, Segment } from 'semantic-ui-react';
+import React, { Component } from 'react';
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Input,
+  List,
+  Segment
+} from 'semantic-ui-react';
+import * as action from './actions/index.js';
+import { connect } from 'react-redux';
 
 import { CustomMessage, Navbar } from 'components';
 import 'styling/semantic.less';
@@ -17,178 +27,82 @@ const leftItems = [
 const rightItems = [
   {
     as: 'a',
-    content: 'Github',
-    href: 'https://github.com/Semantic-Org/Semantic-UI-React',
+    content: 'Frontend Repository',
+    href: 'https://github.com/glitches/arduino-react-frontend',
     icon: 'github',
-    key: 'github',
+    key: 'frontend_github',
     target: '_blank'
   },
   {
     as: 'a',
-    content: 'Stack Overflow',
-    icon: 'stack overflow',
-    href:
-      'https://stackoverflow.com/questions/tagged/semantic-ui-react?sort=votes',
-    key: 'so',
+    content: 'Backend Repository',
+    icon: 'github',
+    href: 'https://github.com/glitches/arduino-server',
+    key: 'backend_github',
     target: '_blank'
   }
 ];
 
-const App = () => (
-  <Navbar leftItems={leftItems} rightItems={rightItems}>
-    <Segment>
-      <Header as="h1">Arduino Commander</Header>
+class App extends Component {
+  state = {};
 
-      <Grid>
-        <Grid.Column computer={6} mobile={16}>
-          <p>
-            Welcome to your Semantic UI React App! It is awesome{' '}
-            <span aria-label="emoji" role="img">
-              😉
-            </span>
-          </p>
+  callFade = () => {
+    const { fade_millisec } = this.props.arduino;
+    this.props.fadeLed(fade_millisec);
+  };
 
-          <p>
-            This boilerplate is designed to show theming features of SUI with
-            modern environment. It based on the awesome{' '}
-            <a
-              href="https://github.com/facebookincubator/create-react-app"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Create React App package
-            </a>{' '}
-            with some additions.
-          </p>
+  callStrobe = () => {
+    const { strobe_endpoint } = this.props.arduino;
+    console.log(strobe_endpoint);
+    this.props.strobeLed(strobe_endpoint);
+    this.props.strobeOn();
+  };
 
-          <Header as="h4">React Hot Loader</Header>
-          <p>
-            <a
-              href="https://github.com/gaearon/react-hot-loader"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              React Hot Loader
-            </a>{' '}
-            become stable and we can use safely, it improves your delevopment
-            speed cardinally.
-          </p>
+  setFadeTime = (e, data) => {
+    //    console.log('event', e.target);
+    e.preventDefault();
+    this.props.fadeTime(data.value);
+  };
 
-          <Header as="h4">LESS loader</Header>
-          <p>
-            Semantic UI is powered by LESS, so we need it to enable its powerful
-            theming. We also enabled{' '}
-            <a
-              href="https://github.com/css-modules/css-modules"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              CSS modules
-            </a>{' '}
-            for your components.
-          </p>
+  render() {
+    const { strobe_on } = this.props.arduino;
+    return (
+      <Navbar leftItems={leftItems} rightItems={rightItems}>
+        <Segment>
+          <Header as="h1">Arduino Commander</Header>
 
-          <Header as="h4">Bundle analyzer and direct imports</Header>
-          <p>
-            Semantic UI React is very powerful, but in most cases you do not
-            need all its modules. In fact, unused modules should be removed by{' '}
-            <a
-              href="https://webpack.js.org/guides/tree-shaking/"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Tree Shaking
-            </a>
-            , but current situation does not allow to rely on it. Our users use
-            direct import of SUIR components, but we do not recommend to use
-            this approach because paths to modules can be changed. We added{' '}
-            <a
-              href="https://www.npmjs.com/package/babel-plugin-direct-import"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              direct-import
-            </a>{' '}
-            plugin that automatically transform your import to direct.
-          </p>
-          <p>
-            We also added bundle analyzer, so you can always review the size of
-            your bundles.
-          </p>
-        </Grid.Column>
-        <Grid.Column computer={10} mobile={16}>
-          <Header as="h3">
-            Themed <code>Button</code>
-          </Header>
-          <p>
-            Semantic UI React does not have own theming and fully relies on CSS
-            part of Semantic UI. It is normal, Semantic UI theming is very
-            powerful, it allows you fully modify the look of your app using
-            theming variables.
-          </p>
-          <p>
-            We changed the <code>primary</code> color of <code>Button</code>{' '}
-            component, it is really easy
-            <span aria-label="emoji" role="img">
-              😁
-            </span>{' '}
-            Take a look to{' '}
-            <code>/src/styling/theme/elements/button.variables</code>. By the
-            way, the <code>theme</code> directory structure fully matches the
-            component structure of Semantic UI React.
-          </p>
-          <Button primary>Primary Button</Button>
-          <Button
-            href="https://semantic-ui.com/usage/theming.html"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn more
-          </Button>
-
-          <Header as="h3">Custom themed component</Header>
-          <p>
-            In the real world you will always need custom components, and you
-            will want to get them themed like your app. An example is below:
-          </p>
-
-          <CustomMessage>Hey, it is a custom message</CustomMessage>
-
-          <p>
-            Take a look <code>/src/components/CustomMessage</code> directory.
-            The are some important things:
-          </p>
-          <List bulleted>
-            <List.Item>
-              we premade <code>heading.less</code> for you, when you will
-              include it in your LESS file you will able to use your existing
-              SUI variables!
-            </List.Item>
-            <List.Item>
-              we enabled{' '}
-              <a
-                href="https://github.com/css-modules/css-modules"
-                rel="noopener noreferrer"
-                target="_blank"
+          <Grid>
+            <Grid.Column computer={6} mobile={16}>
+              <Header as="h3">Fade time (ms)</Header>
+              <Input focus placeholder="Time" onChange={this.setFadeTime} />
+            </Grid.Column>
+            <Grid.Column computer={10} mobile={16}>
+              <Header as="h3">
+                Click the <code>Button</code> to fade
+              </Header>
+              <Button onClick={this.callFade}>Fade LED</Button>
+              <Button
+                onClick={this.callStrobe}
+                color={strobe_on ? 'red' : 'grey'}
               >
-                CSS modules
-              </a>{' '}
-              for your components, it means that you will need to use{' '}
-              <code>:global</code> when your style will match SUI parts
-            </List.Item>
-          </List>
+                Strobe LED
+              </Button>
+            </Grid.Column>
+          </Grid>
+        </Segment>
+      </Navbar>
+    );
+  }
+}
+const mapStateToProps = state => ({
+  arduino: state.arduino
+});
 
-          <Header as="h3">P.S.</Header>
-          <p>
-            This page is fully responsive{' '}
-            <span aria-label="emoji" role="img">
-              😁
-            </span>
-          </p>
-        </Grid.Column>
-      </Grid>
-    </Segment>
-  </Navbar>
-);
+const mapDispatchToProps = dispatch => ({
+  fadeLed: fadeTime => dispatch(action.fadeLed(fadeTime)),
+  fadeTime: millisec => dispatch(action.fadeTime(millisec)),
+  strobeLed: strobe_endpoint => dispatch(action.strobeLed(strobe_endpoint)),
+  strobeOn: () => dispatch(action.strobeOn())
+});
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
